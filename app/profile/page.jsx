@@ -9,11 +9,14 @@ const MyProfile = () => {
   const { data: session } = useSession();
   const [post, setPost] = useState([]);
 
-
   useEffect(() => {
     const fetchPosts = async () => {
       if (session?.user) {
-        const response = await fetch(`/api/users/${session.user.id}/posts`);
+        const response = await fetch(`/api/users/${session.user.id}/posts`, {
+          headers: {
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+          },
+        });
         const data = await response.json();
         setPost(data);
       }
@@ -23,7 +26,7 @@ const MyProfile = () => {
   }, [session]);
 
   const handleEdit = (post) => {
-   router.push(`/update-post?id=${post._id}`);
+    router.push(`/update-post?id=${post._id}`);
     // Handle edit functionality here
   };
 
@@ -33,6 +36,9 @@ const MyProfile = () => {
       try {
         await fetch(`/api/post/${postToDelete._id}`, {
           method: 'DELETE',
+          headers: {
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+          },
         });
         const filteredPosts = post.filter((p) => p._id !== postToDelete._id);
         setPost(filteredPosts);
@@ -41,7 +47,6 @@ const MyProfile = () => {
       }
     }
   };
-  
 
   return (
     <Profile
@@ -49,7 +54,7 @@ const MyProfile = () => {
       desc='Welcome to your personalized profile page'
       data={post}
       handleEdit={handleEdit}
-      handleDelete={handleDelete} // Corrected the typo in this line
+      handleDelete={handleDelete}
     />
   );
 };
