@@ -20,17 +20,17 @@ const ContentCard = ({post,handleTagClick,handleEdit,handleDelete}) => {
       <div className='flex justify-between items-start gap-5'>
         <div className='flex-1 flex justify-start items-center gap-3 cursor-pointer'>
           <Image 
-          src={post.creator.image}
+          src={post.creator?.image}
           alt='use-image'
           height={40}
           width={40}
           className='rounded-full object-contain'/>
           <div className='flex flex-col'>
             <h3 className='font-satoshi font-semibold blue_gradient'>
-              {post.creator.username}
+              {post.creator?.username}
             </h3>
             <p className='font-inter text-sm text-white'>
-              {post.creator.email}
+              {post.creator?.email}
             </p>
             
           </div>
@@ -48,7 +48,7 @@ const ContentCard = ({post,handleTagClick,handleEdit,handleDelete}) => {
       onClick={()=> handleTagClick && handleTagClick(post.tag)}>
         {post.tag}
       </p>
-      {session?.user.id === post.creator._id && pathName ==='/profile'&&(
+      {session?.user.id === post.creator?._id && pathName ==='/profile'&&(
         <div className='mt-5 flex-center gap-4 border-t border-gray-100 pt-3'>
           <p className='font-inter text-sm green_gradient cursor-pointer' onClick={handleEdit}>
             Edit
