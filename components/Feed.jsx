@@ -34,11 +34,12 @@ const Feed = () => {
     const regex = new RegExp(searchtext, "i"); // 'i' flag for case-insensitive search
     return allPosts.filter(
       (item) =>
-        regex.test(item.creator.username) ||
+        (item.creator && regex.test(item.creator.username)) || // Check if item.creator exists
         regex.test(item.tag) ||
         regex.test(item.prompt)
     );
   };
+  
   const handleSearchChange = (e) => {
     clearTimeout(searchTimeout);
     setSearchText(e.target.value);
