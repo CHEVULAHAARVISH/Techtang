@@ -1,7 +1,8 @@
 'use client';
 import { useState, useEffect } from 'react';
 import ContentCard from './ContentCard';
-
+const abortController = new AbortController();
+const signal = abortController.signal;
 const ContentCardList = ({ data, handleTagClick }) => {
   return (
     <div className='mt-16 prompt_layout'>
@@ -25,7 +26,7 @@ const Feed = () => {
 
   useEffect(() => {
     const fetchPosts = async () => {
-      const response = await fetch('/api/post',{cache:'no-store'},{next:{revalidate:2}});
+      const response = await fetch('/api/post',{cache:'no-store',signal});
       const data = await response.json();
       setAllPosts(data);
     };

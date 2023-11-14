@@ -1,7 +1,8 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-
+const abortController = new AbortController();
+const signal = abortController.signal;
 import Form from '@components/Form';
 
 const EditPost = () => {
@@ -16,8 +17,8 @@ const EditPost = () => {
 
   useEffect(() => {
     const getPostDetails = async () => {
-      const response = await fetch(`/api/post/${postId}`, {cache:'no-cache'
-      },{next:{revalidate:2}});
+      const response = await fetch(`/api/post/${postId}`, {cache:'no-cache',signal
+      });
       const data = await response.json();
       setPost({
         post: data.post,
@@ -33,7 +34,9 @@ const EditPost = () => {
     setSubmitting(true);
     if (!postId) return alert("Post is Not Found");
     try {
-      const response = await fetch(`/api/post/${postId}`,{cache:'no-store'}, {next:{revalidate:2}},{
+      const response = await fetch(`/api/post/${postId}`,{
+        cache:'no-cache',
+        signal,
         method: 'PATCH',
         body: JSON.stringify({
           post: post.post,

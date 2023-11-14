@@ -3,7 +3,8 @@ import {useState} from 'react'
 import { useRouter } from 'next/navigation';
 import {useSession } from 'next-auth/react';
 import Form from '@components/Form';
-
+const abortController = new AbortController();
+const signal = abortController.signal;
 const CreatePost = () => {
   const router = useRouter();
   const {data:session} = useSession();
@@ -17,7 +18,9 @@ const CreatePost = () => {
       e.preventDefault();
       setSubmitting(true);
       try {
-        const response = await fetch("/api/post/new",{cache:"no-store"},{next:{revalidate:2}},{
+        const response = await fetch("/api/post/new",{
+          cache:"force-cache",
+          signal,
           method:'POST',        
           body:JSON.stringify({
             post:post.post,

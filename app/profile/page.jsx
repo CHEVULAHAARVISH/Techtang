@@ -3,7 +3,8 @@ import  { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Profile from '@components/Profile';
-  
+const abortController = new AbortController();
+const signal = abortController.signal;
 const MyProfile = () => {
   const router = useRouter();
   const { data: session } = useSession();
@@ -12,7 +13,7 @@ const MyProfile = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       if (session?.user) {
-        const response = await fetch(`/api/users/${session.user.id}/posts`,{cache:'no-store'},{next:{revalidate:2}});
+        const response = await fetch(`/api/users/${session.user.id}/posts`,{cache:'no-store',signal});
         const data = await response.json();
         setPost(data);
       }
@@ -30,7 +31,8 @@ const MyProfile = () => {
     const hasConfirmed = confirm("Are you sure you want to delete the post?");
     if (hasConfirmed) {
       try {
-        await fetch(`/api/post/${postToDelete._id}`,{cache:'no-cache'},{next:{revalidate:2}}, {
+        await fetch(`/api/post/${postToDelete._id}`,{
+          cache:'no-cache',signal,
           method: 'DELETE',
         });
         const filteredPosts = post.filter((p) => p._id !== postToDelete._id);

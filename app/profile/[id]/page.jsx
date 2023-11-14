@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 
 import Profile from "@components/Profile";
-
+const abortController = new AbortController();
+const signal = abortController.signal;
 const UserProfile = ({ params }) => {
   const searchParams = useSearchParams();
   const userName = searchParams.get("name");
@@ -13,7 +14,7 @@ const UserProfile = ({ params }) => {
 
   useEffect(() => {
     const fetchPosts = async () => {
-      const response = await fetch(`/api/users/${params?.id}/posts`,{cache:'no-cache'},{next:{revalidate:2}});
+      const response = await fetch(`/api/users/${params?.id}/posts`,{cache:'no-cache',signal});
       const data = await response.json();
       setUserPosts(data);
     };
