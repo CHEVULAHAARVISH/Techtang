@@ -16,11 +16,8 @@ const EditPost = () => {
 
   useEffect(() => {
     const getPostDetails = async () => {
-      const response = await fetch(`/api/post/${postId}`, {
-        headers: {
-          'Cache-Control': 'no-cache, no-store, must-revalidate',
-        },
-      });
+      const response = await fetch(`/api/post/${postId}`, {cache:'no-cache'
+      },{next:{revalidate:2}});
       const data = await response.json();
       setPost({
         post: data.post,
@@ -36,12 +33,8 @@ const EditPost = () => {
     setSubmitting(true);
     if (!postId) return alert("Post is Not Found");
     try {
-      const response = await fetch(`/api/post/${postId}`, {
+      const response = await fetch(`/api/post/${postId}`,{cache:'no-store'}, {next:{revalidate:2}},{
         method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'Cache-Control': 'no-cache, no-store, must-revalidate',
-        },
         body: JSON.stringify({
           post: post.post,
           tag: post.tag,

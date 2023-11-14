@@ -17,12 +17,8 @@ const CreatePost = () => {
       e.preventDefault();
       setSubmitting(true);
       try {
-        const response = await fetch("/api/post/new",{
-          method:'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Cache-Control': 'no-cache, no-store, must-revalidate',
-          },        
+        const response = await fetch("/api/post/new",{cache:"no-store"},{next:{revalidate:2}},{
+          method:'POST',        
           body:JSON.stringify({
             post:post.post,
             userId:session?.user.id,

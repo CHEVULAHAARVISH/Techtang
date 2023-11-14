@@ -13,13 +13,8 @@ const UserProfile = ({ params }) => {
 
   useEffect(() => {
     const fetchPosts = async () => {
-      const response = await fetch(`/api/users/${params?.id}/posts`, {
-        headers: {
-          'Cache-Control': 'no-cache, no-store, must-revalidate',
-        },
-      });
+      const response = await fetch(`/api/users/${params?.id}/posts`,{cache:'no-cache'},{next:{revalidate:2}});
       const data = await response.json();
-
       setUserPosts(data);
     };
 

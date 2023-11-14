@@ -25,11 +25,7 @@ const Feed = () => {
 
   useEffect(() => {
     const fetchPosts = async () => {
-      const response = await fetch('/api/post', {
-        headers: {
-          'Cache-Control': 'no-cache, no-store, must-revalidate',
-        },
-      });
+      const response = await fetch('/api/post',{cache:'no-store'},{next:{revalidate:2}});
       const data = await response.json();
       setAllPosts(data);
     };

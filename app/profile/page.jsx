@@ -12,11 +12,7 @@ const MyProfile = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       if (session?.user) {
-        const response = await fetch(`/api/users/${session.user.id}/posts`, {
-          headers: {
-            'Cache-Control': 'no-cache, no-store, must-revalidate',
-          },
-        });
+        const response = await fetch(`/api/users/${session.user.id}/posts`,{cache:'no-store'},{next:{revalidate:2}});
         const data = await response.json();
         setPost(data);
       }
@@ -34,11 +30,8 @@ const MyProfile = () => {
     const hasConfirmed = confirm("Are you sure you want to delete the post?");
     if (hasConfirmed) {
       try {
-        await fetch(`/api/post/${postToDelete._id}`, {
+        await fetch(`/api/post/${postToDelete._id}`,{cache:'no-cache'},{next:{revalidate:2}}, {
           method: 'DELETE',
-          headers: {
-            'Cache-Control': 'no-cache, no-store, must-revalidate',
-          },
         });
         const filteredPosts = post.filter((p) => p._id !== postToDelete._id);
         setPost(filteredPosts);
